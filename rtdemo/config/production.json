@@ -1,0 +1,8 @@
+{
+    "api": {
+        "url": "http://api"
+      },
+      "redis": {
+        "url": "redis://redis:6379"
+      }
+}

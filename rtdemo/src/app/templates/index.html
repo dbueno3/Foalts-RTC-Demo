@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Realtime Chat Demo</title>
+    <link rel="shortcut icon" href="logo.png">
+</head>
+
+<body>
+    <div id="connection-state">Disconnected</div>
+    <div id="chat-box">
+        <pre id="rxed-messages"></pre>
+        <input type="text" id="message-input">
+        <button id="send-message">Send</button>
+        <pre id="recieved-messages"></pre>
+    </div>
+    <input type="text" id="room-input" placeholder="Enter room name">
+    <button id="join-room">Join Room</button>
+    <div></div>
+    <script type="module">
+
+
+        import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+        let socket = io('/');
+
+        function wsDisconnectEventHandler() {
+            console.log('wsDisconnectEventHandler')
+            document.querySelector('#connection-state').innerHTML = 'Disconnected';
+        }
+
+        function wsRxCommunicationsEchoEventHandler(payload) {
+            const json = JSON.stringify(payload);
+            console.log(`wsRxCommunicationsEchoEventHandler - payload = ${json}`);
+            document.querySelector('#rxed-messages').innerHTML = json;
+        }
+        
+        function wsRxReccievedMessageHandler(payload) {
+            console.log("Received message:", payload.message);
+            const messagesElem = document.querySelector('#recieved-messages');
+            messagesElem.innerHTML += `${payload.message}\n`;
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            socket.on('connect', () => {
+                document.querySelector('#connection-state').innerHTML = 'Connected';
+            });
+            socket.on('disconnect', wsDisconnectEventHandler);
+            socket.on('/communications/echo', wsRxCommunicationsEchoEventHandler);
+            socket.on('/communications/send', wsRxReccievedMessageHandler);
+            
+            document.querySelector('#send-message').addEventListener('click', () => {
+                const inputElem = document.querySelector('#message-input');
+                const message = inputElem.value;
+                const eventName = '/communications/send';
+                socket.emit(eventName, { eventName: eventName, message: message });
+                inputElem.value = '';
+                console.log('Message sent to the server')
+            });
+
+            document.querySelector('#join-room').addEventListener('click', () => {
+                const roomInput = document.querySelector('#room-input');
+                const roomName = roomInput.value;
+                socket.emit('/join-room', { roomName: roomName });
+                roomInput.value = '';
+                console.log(`Joined room: ${roomName}`);
+            });
+        });
+        
+    </script>
+</body>
+</html>

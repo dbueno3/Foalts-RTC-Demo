@@ -1,0 +1,20 @@
+{
+  "port": "env(PORT)",
+  "settings": {
+    "loggerFormat": "tiny",
+    "session": {
+      "store": "@foal/typeorm"
+    }
+  },
+  "api": {
+    "url": "https://dev-api.aqvc.me"
+  },
+  "redis": {
+    "url": "redis://localhost:6379"
+  },
+  "auth": {
+    "tenantId": "env(AZURE_TENANT_ID)",
+    "clientId": "env(AZURE_CLIENT_ID)",
+    "clientSecret": "env(AZURE_CLIENT_SECRET)"
+  }
+}

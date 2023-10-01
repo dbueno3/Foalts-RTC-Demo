@@ -1,0 +1,6 @@
+{
+  "exit": true,
+  "full-trace": false,
+  "require": "ts-node/register",
+  "spec": ["src/e2e.ts", "src/e2e/**/*.ts"]
+}

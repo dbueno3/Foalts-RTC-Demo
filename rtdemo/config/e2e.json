@@ -1,0 +1,11 @@
+{
+  "port": "3003",
+  "settings": {
+    "loggerFormat": "dev"
+  },
+  "database": {
+    "database": "./e2e_db.sqlite3",
+    "dropSchema": true,
+    "synchronize": true
+  }
+}
