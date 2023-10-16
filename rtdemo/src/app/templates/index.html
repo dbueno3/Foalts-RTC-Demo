@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Add your head content here (e.g., meta tags, link to CSS, etc.) -->
     <title>Chat Application</title>
 </head>
 
@@ -10,10 +9,7 @@
     <div id="connection-state">Disconnected</div>
     <div id="chat-box">
         <pre id="rxed-messages"></pre>
-
-        <label for="room-input">Room Name:</label>
-        <input type="text" id="room-input">
-        <button id="join-room">Join Room</button>
+        <div id="user-count">Users online: 0</div>
 
         <label for="message-input">Message:</label>
         <input type="text" id="message-input">
@@ -31,7 +27,7 @@
             });
 
             socket.on('disconnect', () => {
-                console.log('Disconnected')
+                console.log('Disconnected');
                 document.querySelector('#connection-state').innerHTML = 'Disconnected';
             });
 
@@ -44,25 +40,19 @@
                 console.log("Received message:", payload.message);
                 document.querySelector('#received-messages').innerHTML += `${payload.message}\n`;
             });
+            socket.on('/communications/userCount', (payload) => {
+                console.log(`User count updated: ${payload.count}`);
+                document.querySelector('#user-count').innerHTML = `Users online: ${payload.count}`;
+            });
 
             document.querySelector('#send-message').addEventListener('click', () => {
                 const messageInput = document.querySelector('#message-input');
-                const roomInput = document.querySelector('#room-input');
                 const message = messageInput.value;
-                const room = roomInput.value;
                 const eventName = '/communications/send';
 
-                socket.emit(eventName, { eventName: eventName, message: message, room: room });
+                socket.emit(eventName, { eventName: eventName, message: message });
                 messageInput.value = '';
                 console.log('Message sent to the server');
-            });
-
-            document.querySelector('#join-room').addEventListener('click', () => {
-                const roomInput = document.querySelector('#room-input');
-                const roomName = roomInput.value;
-
-                socket.emit('/join-room', { roomName: roomName });
-                console.log(`Joined room: ${roomName}`);
             });
         });
     </script>

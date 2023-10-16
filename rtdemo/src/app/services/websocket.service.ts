@@ -1,6 +1,7 @@
 import { SocketIOController, WebsocketContext, wsController } from '@foal/socket.io';
 
 import { CommunicationsController } from '../controllers';
+import { UserManagementService } from '../services/user-management.service';
 
 export class ConnectionErrorException extends Error {
 
@@ -31,14 +32,15 @@ export class WebsocketService extends SocketIOController {
     }
 
     async onConnection(ctx: WebsocketContext) {
-        console.log(`${new Date().toISOString()} onConnection`);
 
-        // If the user wants to disconnect from the server: 
-        // Call socket.clost('disconnect', 'reason') and return.
+        console.log(`${new Date().toISOString()} onConnection`);
+       
+
+
+        //const connectionContext = ctx;
         ctx.socket.on('disconnect', function() {
             console.log(`${new Date().toISOString()} onDisconnection`)
         });
     }
-    
 
 }
